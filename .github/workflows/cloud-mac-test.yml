@@ -1,0 +1,60 @@
+name: Cloud Mac Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-mac:
+    runs-on: macos-latest
+
+    steps:
+      - name: Show macOS
+        run: |
+          echo "=== SYSTEM ==="
+          sw_vers
+          uname -a
+          uname -m
+
+      - name: Show Xcode
+        run: |
+          echo "=== XCODE ==="
+          xcodebuild -version
+
+      - name: Show SDKs
+        run: |
+          echo "=== iPhoneOS SDK ==="
+          xcrun --sdk iphoneos --show-sdk-version
+
+          echo "=== macOS SDK ==="
+          xcrun --sdk macosx --show-sdk-version
+
+      - name: Check required tools
+        run: |
+          echo "=== TOOLS ==="
+
+          for tool in \
+            xcrun \
+            xcodebuild \
+            clang \
+            codesign \
+            lipo \
+            otool \
+            install_name_tool
+          do
+            echo "--- $tool ---"
+            command -v "$tool"
+          done
+
+      - name: Check vtool
+        run: |
+          echo "=== VTOOL ==="
+          xcrun vtool -help || true
+
+      - name: Check disk and memory
+        run: |
+          echo "=== DISK ==="
+          df -h /
+
+          echo "=== MEMORY ==="
+          sysctl hw.memsize
+          sysctl hw.ncpu
