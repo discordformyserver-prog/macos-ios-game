@@ -1,0 +1,35 @@
+# Build and package outputs
+*.ipa
+*.dSYM
+*.app
+*.xcarchive
+*.xcworkspace/xcuserdata
+*.xcodeproj/xcuserdata
+*.xcodeproj/project.xcworkspace
+
+# Signing material
+*.p12
+*.pfx
+*.key
+*.pem
+*.mobileprovision
+*.cer
+
+# Generated files
+.DS_Store
+.idea/
+.vscode/
+
+# Local game content and user data
+Games/
+GameLibrary/
+*.game
+*.zip
+
+# Python cache
+__pycache__/
+.pytest_cache/
+*.pyc
+
+# System / vendor-generated artifacts
+vendor/**/.git/

@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  python-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install pytest
+        run: python -m pip install pytest
+
+      - name: Run parser and compatibility tests
+        run: pytest -q tests/test_macho_parser.py
+
+  toolchain-check:
+    runs-on: macos-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Show toolchain
+        run: |
+          echo "=== Xcode ==="
+          xcodebuild -version
+          echo "=== SDKs ==="
+          xcrun --sdk iphoneos --show-sdk-path
+          xcrun --sdk macosx --show-sdk-path
+          echo "=== Tools ==="
+          for tool in xcrun xcodebuild clang codesign lipo otool install_name_tool vtool; do
+            command -v "$tool" || true
+          done
+
+      - name: Validate archive layout
+        run: |
+          ls -la
+          find . -maxdepth 3 -type f | sort | head -200
